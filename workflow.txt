@@ -1,0 +1,148 @@
+# ResearchGPT - Project Overview
+
+## Workflow
+
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   PDF Upload    │────▶│  PDF Processing │────▶│  Vector Storage │
+│   (Frontend)    │     │  (PyMuPDF)      │     │  (Pinecone)     │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                                                        │
+┌─────────────────┐     ┌─────────────────┐     ┌───────▼─────────┐
+│   AI Response   │◀────│   LLM (Groq)    │◀────│  RAG Retrieval  │
+│   (Frontend)    │     │  LLaMA 3.3 70B  │     │  (Semantic)     │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+
+1. Upload → User uploads a PDF research paper
+2. Process → Backend extracts text, detects sections, chunks content
+3. Embed → Each chunk is embedded using BGE-base embedding model
+4. Store → Vectors stored in Pinecone with metadata (page, section)
+5. Query → User asks a question
+6. Retrieve → Semantic search finds relevant chunks
+7. Generate → LLM generates answer with citations
+8. Display → Response shown with page references
+
+---
+
+## Tech Stack
+
+| Layer           | Technology                                    |
+|-----------------|-----------------------------------------------|
+| Frontend        | Next.js 16, React 18, TypeScript, TailwindCSS |
+| Backend         | Python 3.8+, FastAPI, Uvicorn                 |
+| LLM             | Groq API (LLaMA 3.3 70B Versatile)            |
+| Vector DB       | Pinecone (Serverless)                         |
+| Embeddings      | BAAI/bge-base-en-v1.5 (HuggingFace)           |
+| PDF Processing  | PyMuPDF (fitz)                                |
+| Markdown        | react-markdown                                |
+
+---
+
+## Inspiration
+
+Researchers and students spend countless hours reading dense academic papers, often struggling to quickly find specific information or understand complex concepts. We were inspired to create a tool that makes research papers interactive - allowing users to have a conversation with their documents instead of manually scanning through pages.
+
+---
+
+## What it does
+
+ResearchGPT is an AI-powered research assistant that lets you:
+
+- Upload PDF research papers and have them automatically processed
+- Ask questions in natural language about any uploaded paper
+- Get accurate answers with page citations so you can verify the source
+- Choose explanation modes:
+  - 🎓 Academic - Formal terminology with detailed analysis
+  - ✨ Simple - Everyday language without jargon
+  - 🧒 ELI5 (Explain Like I'm 5) - Explained like you're 5 with fun analogies
+- Build a personal research library with multiple papers
+
+---
+
+## How we built it
+
+1. Backend (FastAPI): Built a REST API with endpoints for uploading papers, listing them, deleting, and asking questions. Used async/await for efficient processing.
+
+2. PDF Processing Pipeline: Used PyMuPDF to extract text page-by-page, implemented section detection (Abstract, Methods, etc.), and chunked documents with overlap for context preservation.
+
+3. RAG System: Integrated Pinecone vector database for semantic search. Each chunk is embedded using HuggingFace's BGE model and stored with metadata.
+
+4. LLM Integration: Connected to Groq's API for fast inference with LLaMA 3.3 70B. Built custom prompts for each explanation mode.
+
+5. Frontend (Next.js): Created a modern, dark-themed UI with animated intro screen, real-time chat interface, and responsive sidebar for paper management.
+
+---
+
+## Challenges we ran into
+
+1. Hydration Mismatch: Random particle positions in the intro animation caused server/client differences. Solved by using predefined positions.
+
+2. Model Deprecation: The initial LLaMA 3.1 model was decommissioned mid-development. Had to quickly switch to LLaMA 3.3.
+
+3. Chunk Boundary Issues: Important information often split across chunks. Solved with overlapping chunks (100 character overlap).
+
+4. Citation Accuracy: Ensuring page numbers matched the actual PDF required careful metadata tracking through the entire pipeline.
+
+5. UI Responsiveness: Balancing the sidebar, chat area, and input box positioning for different screen sizes.
+
+---
+
+## Accomplishments that we're proud of
+
+- Page-accurate citations - Every answer includes exact page references users can verify
+- Three explanation modes - Making research accessible to everyone from experts to beginners
+- Beautiful animated UI - Galaxy-themed design with smooth transitions and intro animation
+- Fast responses - Groq's LPU delivers answers in seconds, not minutes
+- Clean architecture - Modular code with separate services for LLM, vector store, and document processing
+
+---
+
+## What we learned
+
+- RAG is powerful but needs tuning - Chunk size, overlap, and retrieval count significantly affect answer quality
+- Vector databases - How semantic search works and how to structure metadata for filtering
+- LLM Prompting - Different prompts dramatically change output quality and style
+- Real-time UX - The importance of loading states, animations, and feedback for user experience
+- PDF complexity - Text extraction is harder than expected with varying layouts and formats
+
+---
+
+## What's next for ResearchGPT
+
+1. Multi-paper queries - Ask questions across your entire research library
+2. Highlighted PDF viewer - Show the exact text being cited in context
+3. Citation export - Generate bibliography entries in various formats
+4. Collaborative features - Share papers and insights with team members
+5. Paper summarization - Auto-generate abstracts and key takeaways
+6. Comparison mode - Compare findings across multiple papers
+7. Mobile app - Read and query papers on the go
+
+---
+
+## Technologies Used
+
+Languages:
+- Python 3.8+
+- TypeScript
+- JavaScript
+- HTML/CSS
+
+Frameworks:
+- Next.js 16 (React Framework)
+- FastAPI (Python Web Framework)
+- TailwindCSS (Styling)
+
+Platforms & Cloud Services:
+- Pinecone (Vector Database - Serverless)
+- Groq Cloud (LLM Inference)
+- HuggingFace (Embedding Models)
+
+APIs:
+- Groq API (LLaMA 3.3 70B)
+- Pinecone API
+
+Libraries:
+- PyMuPDF (PDF processing)
+- sentence-transformers (Embeddings)
+- react-markdown (Markdown rendering)
+- python-dotenv (Environment management)
+- Uvicorn (ASGI server)
