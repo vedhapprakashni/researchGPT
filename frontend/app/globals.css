@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* Galaxy Theme Colors */
+    --bg-primary: 10, 10, 20;
+    --bg-secondary: 18, 18, 35;
+    --bg-tertiary: 25, 25, 50;
+    --bg-card: 20, 20, 40;
+
+    --border-subtle: 40, 40, 70;
+    --border-hover: 60, 60, 100;
+
+    --accent-primary: 130, 140, 255;
+    --accent-secondary: 180, 120, 255;
+    --accent-gradient: linear-gradient(135deg, rgb(130, 140, 255), rgb(180, 120, 255));
+
+    --galaxy-white: 240, 240, 255;
+    --galaxy-light: 200, 200, 230;
+    --galaxy-silver: 150, 150, 180;
+    --text-muted: 100, 100, 130;
+
+    --success: 100, 220, 150;
+    --error: 255, 100, 100;
+    --warning: 255, 180, 80;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    background: rgb(var(--bg-primary));
+    color: rgb(var(--galaxy-light));
+}
+
+/* Smooth transitions */
+.smooth {
+    transition: all 0.2s ease;
+}
+
+/* Glass effect */
+.glass {
+    background: rgba(var(--bg-secondary), 0.8);
+    backdrop-filter: blur(12px);
+}
+
+/* Card style */
+.card {
+    background: rgb(var(--bg-card));
+    border: 1px solid rgb(var(--border-subtle));
+    border-radius: 12px;
+}
+
+/* Gradient text */
+.gradient-text {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Glow effect */
+.glow {
+    box-shadow: 0 0 30px rgba(var(--accent-primary), 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Dropzone styles */
+.dropzone {
+    border: 2px dashed rgb(var(--border-subtle));
+    background: rgba(var(--bg-tertiary), 0.5);
+    transition: all 0.3s ease;
+}
+
+.dropzone:hover,
+.dropzone.active {
+    border-color: rgb(var(--accent-primary));
+    background: rgba(var(--accent-primary), 0.1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(var(--bg-secondary));
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(var(--border-hover));
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--accent-primary));
+}
+
+/* Button styles */
+button:focus {
+    outline: none;
+}
+
+button:focus-visible {
+    outline: 2px solid rgb(var(--accent-primary));
+    outline-offset: 2px;
+}
+
+/* Input styles */
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: rgb(var(--accent-primary));
+}
+
+/* Loading shimmer */
+.loading-shimmer {
+    background: linear-gradient(90deg,
+            rgba(var(--bg-tertiary), 0.5) 25%,
+            rgba(var(--accent-primary), 0.1) 50%,
+            rgba(var(--bg-tertiary), 0.5) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
