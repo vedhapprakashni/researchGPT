@@ -33,7 +33,7 @@ SECTION_PATTERNS = [
 
 class PDFParser:
     """Parse PDF documents and extract structured text"""
-    
+    #converts all section patters to regex objects
     def __init__(self):
         self.section_patterns = [re.compile(p, re.IGNORECASE) for p in SECTION_PATTERNS]
     
