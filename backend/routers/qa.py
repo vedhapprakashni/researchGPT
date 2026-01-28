@@ -38,10 +38,31 @@ async def ask_question(request: QuestionRequest):
         vs = get_vector_store()
         rag = RAGPipeline(vs)
         
+        # If group_id is provided, get papers from group
+        paper_ids = None
+        if request.group_id:
+            from ..services.group_service import get_group_service
+            group_service = get_group_service()
+            group = await group_service.get_group(request.group_id)
+            
+            if not group:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Group {request.group_id} not found"
+                )
+            
+            paper_ids = group.paper_ids
+            if not paper_ids:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Group has no papers. Please add papers to the group first."
+                )
+        
         # Get answer
         result = await rag.answer_question(
             question=request.question,
             paper_id=request.paper_id,
+            paper_ids=paper_ids,  # Use paper_ids from group, not group_id
             mode=request.mode,
             top_k=request.top_k
         )

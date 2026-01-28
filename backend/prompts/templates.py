@@ -68,6 +68,26 @@ ELI5_PROMPT = """You are explaining research paper concepts to someone who has n
 
 ## Answer:"""
 
+# Multi-paper comparison mode
+MULTI_PAPER_PROMPT = """You are analyzing and comparing multiple research papers.
+
+## Retrieved Context from Multiple Papers:
+{context}
+
+## User Question:
+{question}
+
+## Instructions:
+- Compare and synthesize information across ALL provided papers
+- When citing, clearly indicate which paper_id the information comes from
+- Highlight similarities and differences between papers
+- Use format: "According to [Section, Page X from paper_id XXX]..."
+- If comparing methodologies, results, or conclusions, structure your answer with clear sections
+- Be objective and evidence-based in your comparisons
+
+## Answer:"""
+
+
 
 def get_prompt(mode: str = "academic") -> str:
     """Get the appropriate prompt template for the mode"""

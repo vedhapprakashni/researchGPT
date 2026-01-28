@@ -56,12 +56,13 @@ class VectorStore:
             raise RuntimeError("VectorStore not initialized. Call initialize() first.")
         return self._index
     
-    async def upsert_chunks(self, chunks: List[Dict]) -> int:
+    async def upsert_chunks(self, chunks: List[Dict], group_id: Optional[str] = None) -> int:
         """
         Store document chunks with their embeddings
         
         Args:
             chunks: List of {chunk_id, paper_id, section, page, text}
+            group_id: Optional group ID to associate chunks with
             
         Returns:
             Number of vectors upserted
@@ -76,15 +77,21 @@ class VectorStore:
         # Prepare vectors for Pinecone
         vectors = []
         for chunk, embedding in zip(chunks, embeddings):
+            metadata = {
+                "paper_id": chunk["paper_id"],
+                "section": chunk["section"],
+                "page": chunk["page"],
+                "text": chunk["text"][:1000]  # Pinecone metadata limit
+            }
+            
+            # Add group_id if provided
+            if group_id:
+                metadata["group_id"] = group_id
+            
             vectors.append({
                 "id": chunk["chunk_id"],
                 "values": embedding,
-                "metadata": {
-                    "paper_id": chunk["paper_id"],
-                    "section": chunk["section"],
-                    "page": chunk["page"],
-                    "text": chunk["text"][:1000]  # Pinecone metadata limit
-                }
+                "metadata": metadata
             })
         
         # Upsert in batches of 100
@@ -102,7 +109,9 @@ class VectorStore:
         self,
         query_text: str,
         top_k: int = 5,
-        paper_id: Optional[str] = None
+        paper_id: Optional[str] = None,
+        group_id: Optional[str] = None,
+        paper_ids: Optional[List[str]] = None
     ) -> List[Dict]:
         """
         Search for relevant chunks
@@ -110,7 +119,9 @@ class VectorStore:
         Args:
             query_text: Question or search query
             top_k: Number of results to return
-            paper_id: Optional filter by paper
+            paper_id: Optional filter by single paper
+            group_id: Optional filter by group
+            paper_ids: Optional filter by list of papers
             
         Returns:
             List of {chunk_id, score, text, section, page, paper_id}
@@ -122,6 +133,10 @@ class VectorStore:
         filter_dict = None
         if paper_id:
             filter_dict = {"paper_id": {"$eq": paper_id}}
+        elif group_id:
+            filter_dict = {"group_id": {"$eq": group_id}}
+        elif paper_ids:
+            filter_dict = {"paper_id": {"$in": paper_ids}}
         
         # Query Pinecone
         results = self.index.query(

@@ -50,12 +50,52 @@ class PaperDeleteResponse(BaseModel):
     message: str
 
 
+# ============ Group Models ============
+
+class PaperGroup(BaseModel):
+    """Paper group for multi-document queries"""
+    group_id: str
+    name: str
+    description: Optional[str] = None
+    paper_ids: List[str] = []
+    created_date: datetime
+
+
+class GroupCreate(BaseModel):
+    """Request to create a new group"""
+    name: str = Field(..., min_length=1, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    paper_ids: List[str] = []
+
+
+class GroupUpdate(BaseModel):
+    """Request to update a group"""
+    name: Optional[str] = Field(None, min_length=1, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    add_papers: Optional[List[str]] = None
+    remove_papers: Optional[List[str]] = None
+
+
+class GroupListResponse(BaseModel):
+    """Response for listing groups"""
+    groups: List[PaperGroup]
+    total: int
+
+
+class GroupDeleteResponse(BaseModel):
+    """Response after deleting a group"""
+    success: bool
+    group_id: str
+    message: str
+
+
 # ============ Q&A Models ============
 
 class QuestionRequest(BaseModel):
     """Request to ask a question"""
     question: str = Field(..., min_length=3, max_length=1000)
     paper_id: Optional[str] = None  # If None, search all papers
+    group_id: Optional[str] = None  # If set, query all papers in this group
     mode: str = Field(default="academic", pattern="^(academic|simple|eli5)$")
     top_k: int = Field(default=5, ge=1, le=10)
 

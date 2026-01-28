@@ -28,6 +28,8 @@ class RAGPipeline:
         self,
         question: str,
         paper_id: Optional[str] = None,
+        group_id: Optional[str] = None,
+        paper_ids: Optional[List[str]] = None,
         mode: str = "academic",
         top_k: int = 5
     ) -> Dict:
@@ -37,6 +39,8 @@ class RAGPipeline:
         Args:
             question: User's question
             paper_id: Optional specific paper to search (None = all papers)
+            group_id: Optional group to search within
+            paper_ids: Optional list of papers to search
             mode: Response mode (academic, simple, eli5)
             top_k: Number of chunks to retrieve
             
@@ -47,7 +51,9 @@ class RAGPipeline:
         chunks = await self.vector_store.query(
             query_text=question,
             top_k=top_k,
-            paper_id=paper_id
+            paper_id=paper_id,
+            group_id=group_id,
+            paper_ids=paper_ids
         )
         
         if not chunks:

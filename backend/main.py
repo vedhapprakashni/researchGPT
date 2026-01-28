@@ -51,11 +51,12 @@ app.add_middleware(
 )
 
 # Import routers AFTER app is created to avoid circular imports
-from .routers import papers, qa
+from .routers import papers, qa, groups
 
 # Include routers
 app.include_router(papers.router, prefix="/api", tags=["Papers"])
 app.include_router(qa.router, prefix="/api", tags=["Q&A"])
+app.include_router(groups.router, prefix="/api", tags=["Groups"])
 
 
 @app.get("/")
