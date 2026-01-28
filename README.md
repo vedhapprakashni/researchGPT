@@ -4,10 +4,10 @@ AI-powered Research Paper Assistant using RAG (Retrieval-Augmented Generation).
 
 ## Features
 
-- 📄 Upload research papers (PDF)
-- 💬 Ask questions about your papers
-- 🎯 Get accurate, context-grounded answers
-- 📍 Responses include page citations
+- Upload research papers (PDF)
+- Ask questions about your papers
+- Get accurate, context-grounded answers
+- Responses include page citations
 
 ## Quick Start
 
