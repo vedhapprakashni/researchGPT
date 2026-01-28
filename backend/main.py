@@ -44,11 +44,7 @@ app = FastAPI(
 # CORS middleware for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://research-gpt-sepia.vercel.app",
-    ],  # Allow all origins during development
+    allow_origins=["*"],  # Allow all origins temporarily for debugging
     allow_credentials=False,  # Must be False when using wildcard
     allow_methods=["*"],
     allow_headers=["*"],
